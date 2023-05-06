@@ -1,6 +1,97 @@
-function knightMoves() {}
+class Board {
+  constructor(position) {
+    this.board = [
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null],
+    ];
+    this.knight;
+    (() => {
+      let [column, row] = position;
+      if (column <= 7 && row <= 7 && column >= 0 && row >= 0) {
+        this.board[-row + 7][column] = 'K';
+        this.knight = [column, row];
+      }
+    })();
+    this.history = [this.knight];
+  }
 
-function possibleMoves(arrXY) {
+  movePiece(position) {
+    let [column, row] = position;
+    if (column <= 7 && row <= 7 && column >= 0 && row >= 0) {
+      this.board[-row + 7][column] = 'K';
+      this.board[-this.knight[1] + 7][this.knight[0]] = 1;
+      this.history.push(position);
+      this.knight = position;
+    }
+  }
+
+  positionStatus(position) {
+    let [column, row] = position;
+    if (column <= 7 && row <= 7 && column >= 0 && row >= 0) {
+      return this.board[-row + 7][column];
+    }
+    return null;
+  }
+}
+
+function compareArrays(arr1, arr2) {
+  if (arr1.length !== arr2.length) return false;
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) return false;
+  }
+  return true;
+}
+
+function shortestDistance(knightPosition, possiblesArr) {}
+console.log(shortestDistance([3, 3]));
+
+function knightMoves(startPosition, endPosition) {
+  let mainBoard = new Board(startPosition);
+
+  /**
+   * create shortestDistance function
+   *  input knight position and array of possible moves
+   *  output [x,y] position that's the closest
+   *  use shortest distance formula
+   *  i could build a arr of positions from shortest longest
+   *    start at front
+   *    test with .positionStatus()
+   *      if it === null
+   *        move
+   *  restrictions:
+   *    it can't be visited (!= 1)
+   *
+   * this may not give me the shortest path
+   */
+
+  // while (
+  //   !compareArrays(endPosition, mainBoard.history[mainBoard.history.length - 1])
+  // ) {
+  //   let possibles = possibleMoves(mainBoard.knight, mainBoard);
+  //   let closest = shortestDistance(mainBoard.knight, possibles);
+  //   mainBoard.movePiece(closest);
+
+  //   if (
+  //     compareArrays(
+  //       mainBoard.knight,
+  //       mainBoard.history[mainBoard.history.length - 1]
+  //     )
+  //   ) {
+  //     break;
+  //   }
+  // }
+
+  return mainBoard.history;
+}
+console.log(knightMoves([0, 0], [1, 2]));
+
+function possibleMoves(arrXY, currentBoard) {
   let [x, y] = arrXY;
 
   let move1 = x + 1 <= 7 && y + 2 <= 7 ? [x + 1, y + 2] : null;
@@ -15,32 +106,52 @@ function possibleMoves(arrXY) {
   let moves = [move1, move2, move3, move4, move5, move6, move7, move8];
   let arr = [];
   for (let i = 0; i < moves.length; i++) {
-    if (moves[i]) arr.push(moves[i]);
+    // if status is null, add to arr
+    if (moves[i]) {
+      if (currentBoard.positionStatus(moves[i]) === null) arr.push(moves[i]);
+    }
   }
   return arr;
 }
-console.log(possibleMoves([6, 0]));
+// console.log(possibleMoves([6, 0]));
+
+// let possibles = possibleMoves([3, 3]);
+// for (let i = 0; i < possibles.length; i++) {
+//   // console.log(possibles[i]);
+//   let possibles2 = possibleMoves(possibles[i]);
+//   for (let j = 0; j < possibles2.length; j++) {
+//     // console.log(possibles[i], possibles2[j]);
+//     let possibles3 = possibleMoves(possibles2[j]);
+//     for (let k = 0; k < possibles3.length; k++) {
+//       // console.log(possibles[i], possibles2[j], possibles3[k]);
+//     }
+//   }
+// }
 
 /**
  * goal: input 2 positions [x1, y1], [x2, y2]
  * output shortest path to get there [[x1, y1]...[x2, y2]]
  *
  * ideas:
- * find out how the knight moves
- *  twice(up, down, left, or right)
- *    then once(left or right)
  * build a board
  *  maybe not build a board, just have limits to its position
  * build one piece and track it's position
  *  the positions would be x: 0-7 and y: 0-7
- * depending on piece position, have all it's possible moves
- *  make a function for this
- *    input an array [x, y]
- *    output possibles [[x,y],[x,y],etc.]
- *    keep in mind board
- *    turn in nodes later
  * note down pieces that have been visited
  * note down pieces that haven't been visited
+ * i'm limited by the board limits(8 x 8)
+ * i'm also limited by where others have been
+ *  if the spot has been visited, add it to a queue??
+ *  also don't search backwards
+ * to all possible moves,
+ *  calculate distance
+ *  shortest distance
+ *    if not visited move
+ *    else pick 2nd shortest distance
+ *      check it hasn't been visited
+ *      else pick 3rd shortest distance etc
+ *  it has to not be visited
+ *  it has to be the shortest distance(distance formu )
  *
  * Process: [1,2,3,4]
  * 1. script that creates game board and knight
