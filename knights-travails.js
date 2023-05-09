@@ -48,11 +48,35 @@ function compareArrays(arr1, arr2) {
   return true;
 }
 
-function shortestDistance(knightPosition, possiblesArr) {}
-console.log(shortestDistance([3, 3]));
+function shortestDistance(knightPosition, possiblesArr, endPosition) {
+  // console.log(knightPosition, 'knightPosition');
+  // console.log(possiblesArr, 'possiblesArr');
+
+  let shortest = [Infinity, []];
+  for (let i = 0; i < possiblesArr.length; i++) {
+    // let [x1, y1] = knightPosition;
+    let [x1, y1] = endPosition;
+    let [x2, y2] = possiblesArr[i];
+    let distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+    console.log(distance);
+
+    if (compareArrays(possiblesArr[i], endPosition)) {
+      return endPosition;
+    }
+
+    if (distance < shortest[0]) {
+      shortest = [distance, possiblesArr[i]];
+    }
+  }
+
+  return shortest[1];
+}
 
 function knightMoves(startPosition, endPosition) {
   let mainBoard = new Board(startPosition);
+
+  // let possibles = possibleMoves(mainBoard.knight, mainBoard);
+  // console.log(shortestDistance(startPosition, possibles));
 
   /**
    * create shortestDistance function
@@ -70,26 +94,34 @@ function knightMoves(startPosition, endPosition) {
    * this may not give me the shortest path
    */
 
-  // while (
-  //   !compareArrays(endPosition, mainBoard.history[mainBoard.history.length - 1])
-  // ) {
-  //   let possibles = possibleMoves(mainBoard.knight, mainBoard);
-  //   let closest = shortestDistance(mainBoard.knight, possibles);
-  //   mainBoard.movePiece(closest);
+  while (
+    !compareArrays(endPosition, mainBoard.history[mainBoard.history.length - 1])
+  ) {
+    // console.log(mainBoard.history, 'history1');
+    let possibles = possibleMoves(mainBoard.knight, mainBoard);
+    let closest = shortestDistance(mainBoard.knight, possibles, endPosition);
+    mainBoard.movePiece(closest);
+    console.log(closest, 'closest');
+    // console.log(mainBoard.history, 'history');
+    /**
+     * the history aint adding up right
+     */
 
-  //   if (
-  //     compareArrays(
-  //       mainBoard.knight,
-  //       mainBoard.history[mainBoard.history.length - 1]
-  //     )
-  //   ) {
-  //     break;
-  //   }
-  // }
+    // if (
+    //   compareArrays(
+    //     mainBoard.knight,
+    //     mainBoard.history[mainBoard.history.length - 1]
+    //   )
+    // ) {
+    // console.log('say what');
+    // console.log(mainBoard.history, 'history2');
+    //   break;
+    // }
+  }
 
   return mainBoard.history;
 }
-console.log(knightMoves([0, 0], [1, 2]));
+console.log(knightMoves([3, 3], [4, 3]));
 
 function possibleMoves(arrXY, currentBoard) {
   let [x, y] = arrXY;
@@ -113,7 +145,7 @@ function possibleMoves(arrXY, currentBoard) {
   }
   return arr;
 }
-// console.log(possibleMoves([6, 0]));
+// console.log(possibleMoves([6, 0], new Board([3, 3])));
 
 // let possibles = possibleMoves([3, 3]);
 // for (let i = 0; i < possibles.length; i++) {
