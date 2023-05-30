@@ -102,11 +102,34 @@ function buildTree(rootPosition, currentBoard, endPosition) {
   return root;
 }
 
+function buildTree2(rootPosition, currentBoard, endPosition) {
+  let root = new Node(rootPosition);
+  let possibles = possibleMoves(rootPosition, currentBoard);
+  let queue = [...possibles];
+  let arr = [];
+  let lastChecked;
+
+  while (queue.length > 0) {
+    let firstInQueue = queue[0];
+    let newNode = new Node(firstInQueue);
+
+    root.children.push(newNode);
+    // if (compareArrays(endPosition, firstInQueue)) break;
+
+    queue.shift();
+  }
+
+  return root;
+}
+
 function knightMoves(startPosition, endPosition) {
   let mainBoard = new Board(startPosition);
 
-  // buildTree example
-  console.log(buildTree(startPosition, mainBoard, endPosition));
+  // buildTree example(solve) inefficient tho
+  // console.log(buildTree(startPosition, mainBoard, endPosition));
+
+  // buildTree2 example
+  console.log(buildTree2(startPosition, mainBoard, endPosition));
 
   while (
     !compareArrays(endPosition, mainBoard.history[mainBoard.history.length - 1])
@@ -117,7 +140,7 @@ function knightMoves(startPosition, endPosition) {
   }
   return mainBoard.history;
 }
-console.log(knightMoves([3, 3], [4, 3]), 'kM');
+console.log(knightMoves([0, 0], [1, 2]), 'kM');
 
 function possibleMoves(arrXY, currentBoard) {
   let [x, y] = arrXY;
