@@ -103,23 +103,32 @@ function buildTree(rootPosition, currentBoard, endPosition) {
 }
 
 function buildTree2(rootPosition, currentBoard, endPosition) {
-  let root = new Node(rootPosition);
-  let possibles = possibleMoves(rootPosition, currentBoard);
-  let queue = [...possibles];
   let arr = [];
+  let root = new Node(rootPosition);
+  let queue = [root];
+
+  let possibles = possibleMoves(rootPosition, currentBoard);
+  root.children = possibles;
   let lastChecked;
 
-  while (queue.length > 0) {
+  function enqueueChildren(node) {
+    queue.push(possibles);
+  }
+
+  while (queue.length !== 0) {
     let firstInQueue = queue[0];
     let newNode = new Node(firstInQueue);
 
-    root.children.push(newNode);
-    // if (compareArrays(endPosition, firstInQueue)) break;
+    console.log('while');
 
-    queue.shift();
+    enqueueChildren(firstInQueue);
+    arr.push(queue.shift());
+
+    // root.children.push(newNode);
+    // if (compareArrays(endPosition, firstInQueue)) break;
   }
 
-  return root;
+  return arr;
 }
 
 function knightMoves(startPosition, endPosition) {
@@ -129,7 +138,7 @@ function knightMoves(startPosition, endPosition) {
   // console.log(buildTree(startPosition, mainBoard, endPosition));
 
   // buildTree2 example
-  console.log(buildTree2(startPosition, mainBoard, endPosition));
+  console.log(buildTree2(startPosition, mainBoard, endPosition), 'bT2');
 
   while (
     !compareArrays(endPosition, mainBoard.history[mainBoard.history.length - 1])
