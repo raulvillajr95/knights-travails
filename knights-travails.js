@@ -73,7 +73,6 @@ function buildTree(rootPosition, currentBoard, endPosition) {
   let possibles = possibleMoves(rootPosition, currentBoard);
   for (let i = 0; i < possibles.length; i++) {
     let newNode = new Node(possibles[i]);
-
     if (compareArrays(endPosition, possibles[i]))
       console.log(rootPosition, endPosition);
 
@@ -103,39 +102,36 @@ function buildTree(rootPosition, currentBoard, endPosition) {
 }
 
 function buildTree2(rootPosition, currentBoard, endPosition) {
-  let arr = [];
   let root = new Node(rootPosition);
-  let queue = [root];
-
   let possibles = possibleMoves(rootPosition, currentBoard);
-  root.children = possibles;
-  let lastChecked;
 
-  function enqueueChildren(node) {
-    queue.push(possibles);
+  // for (let i = 0; i < possibles.length; i++) {
+  //   let newNode = new Node(possibles[i]);
+  //   if (compareArrays(endPosition, possibles[i])) {
+  //     console.log(rootPosition, endPosition);
+  //   }
+  //   root.children.push(newNode);
+  // }
+
+  let i = 0;
+  while (possibles[i] != undefined) {
+    let newNode = new Node(possibles[i]);
+
+    if (compareArrays(endPosition, possibles[i]))
+      console.log(rootPosition, endPosition, 'cm');
+
+    root.children.push(newNode);
+    i++;
   }
 
-  while (queue.length !== 0) {
-    let firstInQueue = queue[0];
-    let newNode = new Node(firstInQueue);
-
-    console.log('while');
-
-    enqueueChildren(firstInQueue);
-    arr.push(queue.shift());
-
-    // root.children.push(newNode);
-    // if (compareArrays(endPosition, firstInQueue)) break;
-  }
-
-  return arr;
+  return root;
 }
 
 function knightMoves(startPosition, endPosition) {
   let mainBoard = new Board(startPosition);
 
   // buildTree example(solve) inefficient tho
-  // console.log(buildTree(startPosition, mainBoard, endPosition));
+  // console.log(buildTree(startPosition, mainBoard, endPosition), 'bT');
 
   // buildTree2 example
   console.log(buildTree2(startPosition, mainBoard, endPosition), 'bT2');
@@ -149,7 +145,7 @@ function knightMoves(startPosition, endPosition) {
   }
   return mainBoard.history;
 }
-console.log(knightMoves([0, 0], [1, 2]), 'kM');
+console.log(knightMoves([0, 0], [2, 1]), 'kM');
 
 function possibleMoves(arrXY, currentBoard) {
   let [x, y] = arrXY;
@@ -197,6 +193,7 @@ function possibleMoves(arrXY, currentBoard) {
  *    moves knight one position back
  *    makes board spot null, removes history, etc.
  *  used queue for breath first search
+ *  base case could be when lastChecked === endPosition
  *
  *  examples:
  *  knightMoves([0,0],[1,2]) == [[0,0],[1,2]]
